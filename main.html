@@ -8,17 +8,17 @@
 
 {% if my_user %}
     <p>Hello {{ my_user.email }} welcome to the application</p>
-    <p> Folder: {{ my_user.root_folder.path }} </p>
-    <form action="/" method="post">
-        New folder name: <input type="text" name="new_folder"/><br/>
-        <input type="hidden" name="current_folder" value="/"/>
-            <input type="submit" name="button" value="Add Folder"/>
-    </form>
-    {% for sub_folder in my_user.root_folder.inner_folders %}
-        <p> Folder: {{ sub_folder}} </p>
+{#    <p> Folder: {{ my_user.root_folder.path }} </p>#}
+{#    <form action="/" method="post">#}
+{#        New folder name: <input type="text" name="new_folder"/><br/>#}
+{#        <input type="hidden" name="current_folder" value="/"/>#}
+{#            <input type="submit" name="button" value="Add Folder"/>#}
+{#    </form>#}
+    {% for sub_folder in folders %}
+        <p> Folder: {{ sub_folder.path}} </p>
         <form action="/" method="post">
         New folder name: <input type="text" name="new_folder"/><br/>
-        <input type="hidden" name="current_folder" value="{{ sub_folder }}"/>
+        <input type="hidden" name="current_folder" value="{{ sub_folder.path }}"/>
         <input type="submit" name="button" value="Add Folder"/>
     </form>
     {% endfor %}

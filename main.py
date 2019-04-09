@@ -4,8 +4,8 @@ from google.appengine.api import users
 from google.appengine.ext import ndb
 import os
 
-from folder import Folder
 from myuser import MyUser
+from folder import Folder
 
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -27,28 +27,28 @@ class MainPage(webapp2.RequestHandler):
             url_string = 'Logout'
             myuser_key = ndb.Key('MyUser', user.user_id())
             myuser = myuser_key.get()
-            # unsorted_folders = []
-            # for elem in myuser.root_folder.inner_folders:
-            #     unsorted_folders.append(elem)
-            # folders = unsorted_folders.sort()
+            if myuser is not None:
+                folders = Folder.query(ancestor=myuser.key).order(Folder.path).fetch()
+            else:
+                folders = []
 
             if myuser is None:
-                myuser = MyUser(id=user.user_id(), email=str(user.email()))
-                root_folder = Folder(user_id=user.user_id(), path="/")
+                myuser = MyUser(id=user.user_id(), key=myuser_key, email=str(user.email()))
+                root_folder = Folder(parent=myuser.key, path="/")
                 root_folder.put()
-                myuser.root_folder = root_folder
                 myuser.put()
+                folders.append(root_folder)
         else:
             url = users.create_login_url(self.request.uri)
             url_string = 'Login'
             myuser = None
-            # folders = None
+            folders = None
 
         template_values = {
             'url': url,
             'url_string': url_string,
-            'my_user': myuser
-            # 'folders': folders
+            'my_user': myuser,
+            'folders': folders
         }
 
         template = JINJA_ENVIRONMENT.get_template('main.html')
@@ -66,22 +66,18 @@ class MainPage(webapp2.RequestHandler):
             myuser_key = ndb.Key('MyUser', user.user_id())
             myuser = myuser_key.get()
 
-            print(cur_folder)
-            cur_folder_obj = ndb.get_multi(set(Folder.query(Folder.path == cur_folder).fetch(keys_only=True)).intersection(Folder.query(Folder.user_id == user.user_id()).fetch(keys_only=True)))
+            cur_folder_obj = ndb.get_multi(set(Folder.query(Folder.path == cur_folder).fetch(keys_only=True)).intersection(Folder.query(ancestor=myuser.key).fetch(keys_only=True)))
 
-            print(cur_folder_obj)
+            if ndb.get_multi(set(Folder.query(Folder.path == str(cur_folder_obj[0].path + new_folder + "/")).fetch(keys_only=True)).intersection(Folder.query(ancestor=myuser.key).fetch(keys_only=True))):
+                self.redirect('/')
+            else:
+                new_folder_obj = Folder(parent=myuser.key, path=str(cur_folder_obj[0].path + new_folder + "/"))
+                new_folder_obj.put()
 
-            new_folder_obj = Folder(user_id=user.user_id(), path=str(cur_folder_obj[0].path + new_folder + "/"))
-            new_folder_obj.put()
+                cur_folder_obj[0].inner_folders.append(new_folder_obj.path)
+                myuser.put()
 
-            print(myuser)
-
-            myuser.root_folder.inner_folders.append(new_folder_obj.path)
-            cur_folder_obj[0].inner_folders.append(new_folder_obj.path)
-            # TODO Faire dans l'ordre /test -> /testrs -> /truc/dede
-            myuser.put()
-
-            self.redirect('/')
+                self.redirect('/')
 
 
 app = webapp2.WSGIApplication([
