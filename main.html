@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dropbox</title>
+</head>
+<body>
+
+{% if my_user %}
+    <p>Hello {{ my_user.email }} welcome to the application</p>
+    <p> Folder: {{ my_user.root_folder.path }} </p>
+    <form action="/" method="post">
+        New folder name: <input type="text" name="new_folder"/><br/>
+        <input type="hidden" name="current_folder" value="/"/>
+            <input type="submit" name="button" value="Add Folder"/>
+    </form>
+    {% for sub_folder in my_user.root_folder.inner_folders %}
+        <p> Folder: {{ sub_folder}} </p>
+        <form action="/" method="post">
+        New folder name: <input type="text" name="new_folder"/><br/>
+        <input type="hidden" name="current_folder" value="{{ sub_folder }}"/>
+        <input type="submit" name="button" value="Add Folder"/>
+    </form>
+    {% endfor %}
+{% else %}
+    <p>Hello guest welcome to the application</p>
+{% endif %}
+<p>you can {{ url_string }} <a href={{ url }}>here</a></p>
+
+</body>
+</html>
