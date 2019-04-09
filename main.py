@@ -4,6 +4,7 @@ from google.appengine.api import users
 from google.appengine.ext import ndb
 import os
 
+from folder_page import FolderPage
 from myuser import MyUser
 from folder import Folder
 
@@ -33,8 +34,8 @@ class MainPage(webapp2.RequestHandler):
                 folders = []
 
             if myuser is None:
-                myuser = MyUser(id=user.user_id(), key=myuser_key, email=str(user.email()))
-                root_folder = Folder(parent=myuser.key, path="/")
+                myuser = MyUser(id=user.user_id(), user_key=myuser_key, email=str(user.email()))
+                root_folder = Folder(parent=myuser.key, path="/", parent_folder_path="")
                 root_folder.put()
                 myuser.put()
                 folders.append(root_folder)
@@ -58,28 +59,47 @@ class MainPage(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'text/html'
 
         action = self.request.get('button')
+
+        user = users.get_current_user()
+        myuser_key = ndb.Key('MyUser', user.user_id())
+        myuser = myuser_key.get()
+
         if action == 'Add Folder':
             new_folder = self.request.get('new_folder')
             cur_folder = self.request.get('current_folder')
 
-            user = users.get_current_user()
-            myuser_key = ndb.Key('MyUser', user.user_id())
-            myuser = myuser_key.get()
-
-            cur_folder_obj = ndb.get_multi(set(Folder.query(Folder.path == cur_folder).fetch(keys_only=True)).intersection(Folder.query(ancestor=myuser.key).fetch(keys_only=True)))
-
-            if ndb.get_multi(set(Folder.query(Folder.path == str(cur_folder_obj[0].path + new_folder + "/")).fetch(keys_only=True)).intersection(Folder.query(ancestor=myuser.key).fetch(keys_only=True))):
+            if len(new_folder) <= 0:
                 self.redirect('/')
+                return
             else:
-                new_folder_obj = Folder(parent=myuser.key, path=str(cur_folder_obj[0].path + new_folder + "/"))
-                new_folder_obj.put()
+                cur_folder_obj = ndb.get_multi(set(Folder.query(Folder.path == cur_folder).fetch(keys_only=True)).intersection(Folder.query(ancestor=myuser.key).fetch(keys_only=True)))
 
-                cur_folder_obj[0].inner_folders.append(new_folder_obj.path)
-                myuser.put()
+                if ndb.get_multi(set(Folder.query(Folder.path == str(cur_folder_obj[0].path + new_folder + "/")).fetch(keys_only=True)).intersection(Folder.query(ancestor=myuser.key).fetch(keys_only=True))):
+                    self.redirect('/')
+                else:
+                    new_folder_obj = Folder(parent=myuser.key, path=str(cur_folder_obj[0].path + new_folder + "/"), parent_folder_path=cur_folder_obj[0].path)
+                    new_folder_obj.put()
+                    cur_folder_obj[0].inner_folders.append(new_folder_obj.path)
+                    cur_folder_obj[0].put()
+                    self.redirect('/')
 
+        if action == 'Delete Folder':
+            cur_folder = self.request.get('folder_path')
+
+            cur_fold = Folder.query(Folder.path == cur_folder, ancestor=myuser.key).fetch()
+            if cur_fold[0].path is "/":
+                self.redirect('/')
+                return
+            else:
+                parent_folder = Folder.query(Folder.path == cur_fold[0].parent_folder_path, ancestor=myuser.key).fetch()
+                idx = parent_folder[0].inner_folders.index(cur_fold[0].path)
+                del parent_folder[0].inner_folders[idx]
+                cur_fold[0].key.delete()
+                parent_folder[0].put()
                 self.redirect('/')
 
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
+    ('/(.*)', FolderPage)
 ], debug=True)

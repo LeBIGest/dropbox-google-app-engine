@@ -3,6 +3,6 @@ from google.appengine.ext import ndb
 
 
 class MyUser(ndb.Model):
-    key = ndb.KeyProperty()
+    user_key = ndb.KeyProperty()
     email = ndb.StringProperty()
     # root_folder = ndb.StructuredProperty(Folder)

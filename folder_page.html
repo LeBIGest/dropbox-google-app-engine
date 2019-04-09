@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Folder page</title>
+</head>
+<body>
+    <p>{{ url }}</p>
+    <a href="{{ folder.parent_folder_path }}">../</a>
+    <ul>
+        {% for sub_folder in folder.inner_folders %}
+            <li><a href="{{ sub_folder }}">{{ sub_folder }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

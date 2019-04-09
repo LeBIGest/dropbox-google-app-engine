@@ -15,12 +15,16 @@
 {#            <input type="submit" name="button" value="Add Folder"/>#}
 {#    </form>#}
     {% for sub_folder in folders %}
-        <p> Folder: {{ sub_folder.path}} </p>
+        <p> Folder: <a href="{{ sub_folder.path }}">{{ sub_folder.path}}</a> </p>
         <form action="/" method="post">
-        New folder name: <input type="text" name="new_folder"/><br/>
-        <input type="hidden" name="current_folder" value="{{ sub_folder.path }}"/>
-        <input type="submit" name="button" value="Add Folder"/>
-    </form>
+            New folder name: <input type="text" name="new_folder" value=""/><br/>
+            <input type="hidden" name="current_folder" value="{{ sub_folder.path }}"/>
+            <input type="submit" name="button" value="Add Folder"/>
+        </form>
+        <form action="/" method="post">
+            <input type="hidden" name="folder_path" value="{{ sub_folder.path }}">
+            <input type="submit" name="button" value="Delete Folder">
+        </form>
     {% endfor %}
 {% else %}
     <p>Hello guest welcome to the application</p>
