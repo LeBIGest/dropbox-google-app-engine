@@ -4,6 +4,7 @@ from google.appengine.api import users
 from google.appengine.ext import ndb
 import os
 
+from create_folder import CreateFolder
 from folder_page import FolderPage
 from myuser import MyUser
 from folder import Folder
@@ -29,7 +30,7 @@ class MainPage(webapp2.RequestHandler):
             myuser_key = ndb.Key('MyUser', user.user_id())
             myuser = myuser_key.get()
             if myuser is not None:
-                folders = Folder.query(ancestor=myuser.key).order(Folder.path).fetch()
+                folders = Folder.query(Folder.parent_folder_path == "/", ancestor=myuser.key).order(Folder.path).fetch()
             else:
                 folders = []
 
@@ -64,25 +65,6 @@ class MainPage(webapp2.RequestHandler):
         myuser_key = ndb.Key('MyUser', user.user_id())
         myuser = myuser_key.get()
 
-        if action == 'Add Folder':
-            new_folder = self.request.get('new_folder')
-            cur_folder = self.request.get('current_folder')
-
-            if len(new_folder) <= 0:
-                self.redirect('/')
-                return
-            else:
-                cur_folder_obj = ndb.get_multi(set(Folder.query(Folder.path == cur_folder).fetch(keys_only=True)).intersection(Folder.query(ancestor=myuser.key).fetch(keys_only=True)))
-
-                if ndb.get_multi(set(Folder.query(Folder.path == str(cur_folder_obj[0].path + new_folder + "/")).fetch(keys_only=True)).intersection(Folder.query(ancestor=myuser.key).fetch(keys_only=True))):
-                    self.redirect('/')
-                else:
-                    new_folder_obj = Folder(parent=myuser.key, path=str(cur_folder_obj[0].path + new_folder + "/"), parent_folder_path=cur_folder_obj[0].path)
-                    new_folder_obj.put()
-                    cur_folder_obj[0].inner_folders.append(new_folder_obj.path)
-                    cur_folder_obj[0].put()
-                    self.redirect('/')
-
         if action == 'Delete Folder':
             cur_folder = self.request.get('folder_path')
 
@@ -100,6 +82,7 @@ class MainPage(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([
+    ('/create_folder', CreateFolder),
     ('/', MainPage),
     ('/(.*)', FolderPage)
 ], debug=True)

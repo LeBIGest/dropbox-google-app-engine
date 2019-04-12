@@ -9,4 +9,9 @@ indexes:
 - kind: "Folder"
   ancestor: yes
   properties:
+  - name: "parent_folder_path"
+  - name: "path"
+- kind: "Folder"
+  ancestor: yes
+  properties:
   - name: "path"

@@ -5,12 +5,17 @@
     <title>Folder page</title>
 </head>
 <body>
+    <form name="input" action="/create_folder" method="post">
+        New folder name: <input type="text" name="new_folder" pattern="[^()/><\][\\\x22,;|]+" value=""/><br/>
+        <input type="hidden" name="current_folder" value="{{ folder.path }}"/>
+        <input type="submit" name="button" value="Add Folder"/>
+    </form>
     <p>{{ url }}</p>
-    <a href="{{ folder.parent_folder_path }}">../</a>
-    <ul>
-        {% for sub_folder in folder.inner_folders %}
-            <li><a href="{{ sub_folder }}">{{ sub_folder }}</a></li>
-        {% endfor %}
-    </ul>
+        <a href="{{ folder.parent_folder_path }}">../</a>
+            <ul>
+                {% for sub_folder in folder.inner_folders %}
+                    <li><a href="{{ sub_folder }}">{{ sub_folder.replace(folder.path, '') }}</a></li>
+                {% endfor %}
+            </ul>
 </body>
 </html>
