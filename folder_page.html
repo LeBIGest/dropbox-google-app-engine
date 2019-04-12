@@ -15,6 +15,11 @@
             <ul>
                 {% for sub_folder in folder.inner_folders %}
                     <li><a href="{{ sub_folder }}">{{ sub_folder.replace(folder.path, '') }}</a></li>
+                    <form action="/delete_folder" method="post">
+                        <input type="hidden" name="folder_path" value="{{ sub_folder }}">
+                        <input type="hidden" name="cur_folder_path" value="{{ folder.path }}">
+                        <input type="submit" name="button" value="Delete Folder">
+                    </form>
                 {% endfor %}
             </ul>
 </body>

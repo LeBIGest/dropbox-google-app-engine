@@ -5,6 +5,7 @@ from google.appengine.ext import ndb
 import os
 
 from create_folder import CreateFolder
+from delete_folder import DeleteFolder
 from folder_page import FolderPage
 from myuser import MyUser
 from folder import Folder
@@ -56,33 +57,10 @@ class MainPage(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('main.html')
         self.response.write(template.render(template_values))
 
-    def post(self):
-        self.response.headers['Content-Type'] = 'text/html'
-
-        action = self.request.get('button')
-
-        user = users.get_current_user()
-        myuser_key = ndb.Key('MyUser', user.user_id())
-        myuser = myuser_key.get()
-
-        if action == 'Delete Folder':
-            cur_folder = self.request.get('folder_path')
-
-            cur_fold = Folder.query(Folder.path == cur_folder, ancestor=myuser.key).fetch()
-            if cur_fold[0].path is "/":
-                self.redirect('/')
-                return
-            else:
-                parent_folder = Folder.query(Folder.path == cur_fold[0].parent_folder_path, ancestor=myuser.key).fetch()
-                idx = parent_folder[0].inner_folders.index(cur_fold[0].path)
-                del parent_folder[0].inner_folders[idx]
-                cur_fold[0].key.delete()
-                parent_folder[0].put()
-                self.redirect('/')
-
 
 app = webapp2.WSGIApplication([
     ('/create_folder', CreateFolder),
+    ('/delete_folder', DeleteFolder),
     ('/', MainPage),
     ('/(.*)', FolderPage)
 ], debug=True)

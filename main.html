@@ -9,14 +9,19 @@
 {% if my_user %}
     <p>Hello {{ my_user.email }} welcome to the application</p>
     <form action="/create_folder" method="post">
-            New folder name: <input type="text" name="new_folder" pattern="[^()/><\][\\\x22,;|]+" value=""/><br/>
-            <input type="hidden" name="current_folder" value="/"/>
-            <input type="submit" name="button" value="Add Folder"/>
-        </form>
+        New folder name: <input type="text" name="new_folder" pattern="[^()/><\][\\\x22,;|]+" value=""/><br/>
+        <input type="hidden" name="current_folder" value="/"/>
+        <input type="submit" name="button" value="Add Folder"/>
+    </form>
+{#    <form action="{{ upload_url }}" method="post" enctype="multipart/form-data">#}
+{#        Upload File: <input type="file" name="file"/><br/>#}
+{#        <input type="submit"/>#}
+{#    </form>#}
     {% for sub_folder in folders %}
-        <p> Folder: <a href="{{ sub_folder.path }}">{{ sub_folder.path}}</a> </p>
-        <form action="/" method="post">
+        <p> Folder: <a href="{{ sub_folder.path }}">{{ sub_folder.path }}</a></p>
+        <form action="/delete_folder" method="post">
             <input type="hidden" name="folder_path" value="{{ sub_folder.path }}">
+            <input type="hidden" name="cur_folder_path" value="/">
             <input type="submit" name="button" value="Delete Folder">
         </form>
     {% endfor %}
