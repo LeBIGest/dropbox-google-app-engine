@@ -10,6 +10,11 @@
         <input type="hidden" name="current_folder" value="{{ folder.path }}"/>
         <input type="submit" name="button" value="Add Folder"/>
     </form>
+    <form action="{{ upload_url }}" method="post" enctype="multipart/form-data">
+        Upload File: <input type="file" name="file"/>
+        <input type="hidden" name="cur_folder_path" value="{{ folder.path }}">
+        <input type="submit" value="Submit file"/>
+    </form>
     <p>{{ url }}</p>
         <a href="{{ folder.parent_folder_path }}">../</a>
             <ul>
@@ -19,6 +24,16 @@
                         <input type="hidden" name="folder_path" value="{{ sub_folder }}">
                         <input type="hidden" name="cur_folder_path" value="{{ folder.path }}">
                         <input type="submit" name="button" value="Delete Folder">
+                    </form>
+                {% endfor %}
+            </ul>
+            <ul>
+                {% for file in folder.files %}
+                    <li>{{ file.filename }}</li>
+                    <form action="/delete_file" method="post">
+                        <input type="hidden" name="file_name" value="{{ file.filename }}">
+                        <input type="hidden" name="folder_path" value="{{ folder.path }}">
+                        <input type="submit" name="button" value="Delete file">
                     </form>
                 {% endfor %}
             </ul>

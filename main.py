@@ -2,14 +2,17 @@ import webapp2
 import jinja2
 from google.appengine.api import users
 from google.appengine.ext import ndb
+from google.appengine.ext import blobstore
 import os
 
 from create_folder import CreateFolder
+from delete_file import DeleteFile
 from delete_folder import DeleteFolder
+from file import File
 from folder_page import FolderPage
 from myuser import MyUser
 from folder import Folder
-
+from upload_file import UploadFile
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -32,26 +35,30 @@ class MainPage(webapp2.RequestHandler):
             myuser = myuser_key.get()
             if myuser is not None:
                 folders = Folder.query(Folder.parent_folder_path == "/", ancestor=myuser.key).order(Folder.path).fetch()
+                files = File.query(File.linked_folder_path == "/", ancestor=myuser.key).order(File.created_at).fetch()
             else:
                 folders = []
+                files = []
 
             if myuser is None:
                 myuser = MyUser(id=user.user_id(), user_key=myuser_key, email=str(user.email()))
                 root_folder = Folder(parent=myuser.key, path="/", parent_folder_path="")
                 root_folder.put()
                 myuser.put()
-                folders.append(root_folder)
         else:
             url = users.create_login_url(self.request.uri)
             url_string = 'Login'
             myuser = None
             folders = None
+            files = None
 
         template_values = {
             'url': url,
             'url_string': url_string,
             'my_user': myuser,
-            'folders': folders
+            'upload_url': blobstore.create_upload_url('/upload'),
+            'folders': folders,
+            'files': files,
         }
 
         template = JINJA_ENVIRONMENT.get_template('main.html')
@@ -61,6 +68,8 @@ class MainPage(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
     ('/create_folder', CreateFolder),
     ('/delete_folder', DeleteFolder),
+    ('/upload', UploadFile),
+    ('/delete_file', DeleteFile),
     ('/', MainPage),
     ('/(.*)', FolderPage)
 ], debug=True)

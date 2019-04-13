@@ -11,6 +11,11 @@ indexes:
   properties:
   - name: "parent_folder_path"
   - name: "path"
+- kind: "File"
+  ancestor: yes
+  properties:
+  - name: "linked_folder_path"
+  - name: "created_at"
 - kind: "Folder"
   ancestor: yes
   properties:
