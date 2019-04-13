@@ -29,7 +29,12 @@
             </ul>
             <ul>
                 {% for file in folder.files %}
-                    <li>{{ file.filename }}</li>
+                    <li>{{ file.filename + " " + file.type + " " + file.size + " " + file.created_at}}</li>
+                    <form action="/download" method="get">
+                        <input type="hidden" name="file_name" value="{{ file.filename }}">
+                        <input type="hidden" name="folder_path" value="{{ folder.path }}">
+                        <input type="submit" name="button" value="Download file">
+                    </form>
                     <form action="/delete_file" method="post">
                         <input type="hidden" name="file_name" value="{{ file.filename }}">
                         <input type="hidden" name="folder_path" value="{{ folder.path }}">

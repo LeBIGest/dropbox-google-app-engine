@@ -8,6 +8,7 @@ import os
 from create_folder import CreateFolder
 from delete_file import DeleteFile
 from delete_folder import DeleteFolder
+from download_file import DownloadFile
 from file import File
 from folder_page import FolderPage
 from myuser import MyUser
@@ -69,6 +70,7 @@ app = webapp2.WSGIApplication([
     ('/create_folder', CreateFolder),
     ('/delete_folder', DeleteFolder),
     ('/upload', UploadFile),
+    ('/download', DownloadFile),
     ('/delete_file', DeleteFile),
     ('/', MainPage),
     ('/(.*)', FolderPage)

@@ -28,7 +28,12 @@
     {% endfor %}
     <ul>
         {% for file in files %}
-            <li>{{ file.filename }}</li>
+                <li>{{file.filename}} {{ file.type }} {{ file.size }} {{ file.created_at }}</li>
+                <form action="/delete_file" method="post">
+                <input type="hidden" name="file_name" value="{{ file.filename }}">
+                <input type="hidden" name="folder_path" value="/">
+                <input type="submit" name="button" value="Delete file">
+            </form>
         {% endfor %}
     </ul>
 {% else %}
