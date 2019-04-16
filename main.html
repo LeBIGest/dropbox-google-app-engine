@@ -3,11 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Dropbox</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
 
-{% if my_user %}
-    <p>Hello {{ my_user.email }} welcome to the application</p>
+
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
+  <a class="navbar-brand" href="/">Dropbox</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+    </ul>
+        {% if my_user %}
+            <span class="navbar-text">{{ my_user.email }}</span>
+        {% endif %}
+        <a class="nav-link" href={{ url }}>{{ url_string }}</a>
+</div>
+</nav>
+        {% if my_user %}
     <form action="/create_folder" method="post">
         New folder name: <input type="text" name="new_folder" pattern="[^()/><\][\\\x22,;|]+" value=""/><br/>
         <input type="hidden" name="current_folder" value="/"/>
@@ -29,6 +44,11 @@
     <ul>
         {% for file in files %}
                 <li>{{file.filename}} {{ file.type }} {{ file.size }} {{ file.created_at }}</li>
+                <form action="/download" method="get">
+                    <input type="hidden" name="file_name" value="{{ file.filename }}">
+                    <input type="hidden" name="folder_path" value="/">
+                    <input type="submit" name="button" value="Download file">
+                </form>
                 <form action="/delete_file" method="post">
                 <input type="hidden" name="file_name" value="{{ file.filename }}">
                 <input type="hidden" name="folder_path" value="/">
@@ -39,7 +59,11 @@
 {% else %}
     <p>Hello guest welcome to the application</p>
 {% endif %}
-<p>you can {{ url_string }} <a href={{ url }}>here</a></p>
+<p>you can {{ url_string }} <a href={{ url }}>{{ url_string }}</a></p>
 
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -22,11 +22,11 @@ class DeleteFile(webapp2.RequestHandler):
 
         if file_obj[0]:
             folder_obj = Folder.query(ndb.AND(Folder.path == file_obj[0].linked_folder_path), ancestor=myuser.key).fetch()
-            print(file_obj[0])
+            # print(file_obj[0])
             if folder_obj[0]:
                 key = file_obj[0].key
                 delattr(file_obj[0], 'key')
-                print(file_obj[0])
+                # print(file_obj[0])
                 idx = folder_obj[0].files.index(file_obj[0])
                 del folder_obj[0].files[idx]
                 folder_obj[0].put()
