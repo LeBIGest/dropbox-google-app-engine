@@ -1,5 +1,6 @@
-import webapp2
-import jinja2
+# Import all need libraries
+import webapp2  # Python web framework compatible with Google app engine
+import jinja2  # Python templating framework
 from google.appengine.api import users
 from google.appengine.ext import ndb
 from google.appengine.ext import blobstore

@@ -9,6 +9,17 @@ from folder import Folder
 
 
 class DeleteFile(webapp2.RequestHandler):
+
+    def delFile(self, folder, file):
+        key = file.key
+        delattr(file, 'key')
+        idx = folder.files.index(file)
+        del folder.files[idx]
+        folder.put()
+        blob_info = BlobInfo.get(file.blob)
+        blob_info.delete()
+        key.delete()
+
     def post(self):
 
         user = users.get_current_user()
@@ -24,13 +35,5 @@ class DeleteFile(webapp2.RequestHandler):
             folder_obj = Folder.query(ndb.AND(Folder.path == file_obj[0].linked_folder_path), ancestor=myuser.key).fetch()
             # print(file_obj[0])
             if folder_obj[0]:
-                key = file_obj[0].key
-                delattr(file_obj[0], 'key')
-                # print(file_obj[0])
-                idx = folder_obj[0].files.index(file_obj[0])
-                del folder_obj[0].files[idx]
-                folder_obj[0].put()
-                blob_info = BlobInfo.get(file_obj[0].blob)
-                blob_info.delete()
-                key.delete()
+                self.delFile(folder_obj[0], file_obj[0])
         self.redirect(folder_path)
