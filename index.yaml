@@ -16,6 +16,11 @@ indexes:
   properties:
   - name: "linked_folder_path"
   - name: "created_at"
+- kind: "File"
+  ancestor: yes
+  properties:
+  - name: "linked_folder_path"
+  - name: "blob_info.creation"
 - kind: "Folder"
   ancestor: yes
   properties:
