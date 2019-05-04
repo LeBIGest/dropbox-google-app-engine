@@ -96,7 +96,7 @@ class MainPage(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
 
-# Declare the Web APplication with all needed routes
+# Declare the Web Application with all needed routes
 app = webapp2.WSGIApplication([
     ('/create_folder', CreateFolder),  # Route to create a new folder
     ('/delete_folder', DeleteFolder),  # Route to delete a folder

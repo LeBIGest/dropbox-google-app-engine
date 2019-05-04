@@ -20,7 +20,7 @@ class DeleteFile(webapp2.RequestHandler):
         # Get the key of the file
         key = file.key
 
-        # Delete the file from the array of files from the array
+        # Delete the file from the array of files from the folder
         delattr(file, 'key')
         idx = folder.files.index(file)
         del folder.files[idx]
@@ -51,15 +51,17 @@ class DeleteFile(webapp2.RequestHandler):
         folder_path = self.request.get('folder_path')
 
         # Retrieve the File from the Datastore
-        file_obj = File.query(ndb.AND(File.blob_info == filename, File.linked_folder_path == folder_path), ancestor=myuser.key).fetch()
+        file_obj = File.query(ndb.AND(File.filename == filename, File.linked_folder_path == folder_path), ancestor=myuser.key).fetch()
 
-        # If the file exists, get the linked Folder
-        if file_obj[0]:
-            folder_obj = Folder.query(ndb.AND(Folder.path == file_obj[0].linked_folder_path), ancestor=myuser.key).fetch()
+        if file_obj:
 
-            # If the folder exist, call the 'delFile' method
-            if folder_obj[0]:
-                self.delFile(folder_obj[0], file_obj[0])
+            # If the file exists, get the linked Folder
+            if file_obj[0]:
+                folder_obj = Folder.query(ndb.AND(Folder.path == file_obj[0].linked_folder_path), ancestor=myuser.key).fetch()
+
+                # If the folder exist, call the 'delFile' method
+                if folder_obj[0]:
+                    self.delFile(folder_obj[0], file_obj[0])
 
         # Redirect to the current folder page
         self.redirect(folder_path)

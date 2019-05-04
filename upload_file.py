@@ -54,7 +54,7 @@ class UploadFile(blobstore_handlers.BlobstoreUploadHandler):
         new_file = File(parent=myuser.key, linked_folder_path=cur_folder_path, filename=blobinfo.filename, size=blobinfo.size,
                         created_at=blobinfo.creation, type=blobinfo.content_type, md5_hash=blobinfo.md5_hash, blob=upload.key())
 
-        # Retrieve the current folder where the new file wiil be
+        # Retrieve the current folder where the new file will be
         current_folder_obj = Folder.query(Folder.path == cur_folder_path, ancestor=myuser.key).fetch()
 
         # Create a temporary file with needed information to check if it already exists in the current folder

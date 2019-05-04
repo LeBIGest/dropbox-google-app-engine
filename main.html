@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Dropbox</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
 
@@ -30,115 +30,124 @@
     <div class="row justify-content-md-center">
         <div class="col-2">
             {% if my_user %}
-            <a></a>
-    <button class="dropdown-item" type="button" data-toggle="modal" data-target="#newFolderModal">Create a new folder</button>
-        <div class="modal fade" id="newFolderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Add a new folder</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form class="form-group" action="/create_folder" method="post">
-                        <div class="modal-body">
-                            <div class="container-fluid">
-                                <div class="row justify-content-md-center">
-                                    <div class="form-inline">
-                                        <input type="hidden" name="current_folder" value="/"/>
-                                        <input type="text" class="form-control w" id="new_folder_input" name="new_folder"
-                                                pattern="[^()/><\][\\\x22,;|]+" value="" autofocus
-                                                placeholder="Enter a new folder name...">
-                                     </div>
-                                </div>
+                <a></a>
+                <button class="dropdown-item" type="button" data-toggle="modal" data-target="#newFolderModal">Create a
+                    new folder
+                </button>
+                <div class="modal fade" id="newFolderModal" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Add a new folder</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <input type="submit" class="btn btn-primary" name="button" value="Add Folder"/>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    <div class="dropdown-divider"></div>
-    <button class="dropdown-item" type="button" data-toggle="modal" data-target="#newFileModal">Add a new file to this folder</button>
-            <div class="modal fade" id="newFileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Add a new file in this directory</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form action="{{ upload_url }}" method="post" enctype="multipart/form-data">
-                        <div class="modal-body">
-                            <div class="container-fluid">
-                                <div class="row justify-content-md-center">
-                                    <div class="form-inline">
-                                        Upload File: <input type="file" name="file"/>
-                                        <input type="hidden" name="cur_folder_path" value="/">
-                                     </div>
+                            <form class="form-group" action="/create_folder" method="post">
+                                <div class="modal-body">
+                                    <div class="container-fluid">
+                                        <div class="row justify-content-md-center">
+                                            <div class="form-inline">
+                                                <input type="hidden" name="current_folder" value="/"/>
+                                                <input type="text" class="form-control w" id="new_folder_input"
+                                                       name="new_folder"
+                                                       pattern="[^()/><\][\\\x22,;|]+" value="" autofocus
+                                                       placeholder="Enter a new folder name...">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <input type="submit" class="btn btn-primary" name="button" value="Add Folder"/>
+                                </div>
+                            </form>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <input type="submit" class="btn btn-primary" name="button" value="Submit file"/>
-                        </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
-        </div>
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-item" type="button" data-toggle="modal" data-target="#newFileModal">Add a new
+                    file to this folder
+                </button>
+                <div class="modal fade" id="newFileModal" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Add a new file in this directory</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form action="{{ upload_url }}" method="post" enctype="multipart/form-data">
+                                <div class="modal-body">
+                                    <div class="container-fluid">
+                                        <div class="row justify-content-md-center">
+                                            <div class="form-inline">
+                                                Upload File: <input type="file" name="file"/>
+                                                <input type="hidden" name="cur_folder_path" value="/">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <input type="submit" class="btn btn-primary" name="button" value="Submit file"/>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             {% endif %}
         </div>
-            {% if my_user %}
-                <div class="col-10">
+        {% if my_user %}
+            <div class="col-10">
                 {% if folders %}
                     <div class="page-header col-10 text-center">
                         <h2>Folders</h2>
                     </div>
                     <div class="mb-5 table-responsive col-10">
                     <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col"></th>
-                                <th scope="col"></th>
-                                <th scope="col"></th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
                 {% endif %}
                 {% for sub_folder in folders %}
-                     <tr>
-                         <th scope="row"><a href="{{ sub_folder.path }}"><h4>{{ sub_folder.path }}</h4></a></th>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <form action="/delete_folder" method="post">
-                                            <input type="hidden" name="folder_path" value="{{ sub_folder.path }}">
-                                            <input type="hidden" name="cur_folder_path" value="/">
-                                            <input class="btn btn-danger" type="submit" name="button" value="Delete Folder">
-                                        </form>
-                                    </div>
+                    <tr>
+                        <th scope="row"><a href="{{ sub_folder.path }}"><h4>{{ sub_folder.path }}</h4></a></th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <div class="row">
+                                <div class="col-6">
+                                    <form action="/delete_folder" method="post">
+                                        <input type="hidden" name="folder_path" value="{{ sub_folder.path }}">
+                                        <input type="hidden" name="cur_folder_path" value="/">
+                                        <input class="btn btn-danger" type="submit" name="button" value="Delete Folder"
+                                               onclick="displayAlert()">
+                                    </form>
                                 </div>
-                            </td>
-                     </tr>
+                            </div>
+                        </td>
+                    </tr>
                 {% endfor %}
-                    </tbody>
+                </tbody>
                 </table>
-            </div>
-                                {% if not folders %}
+                </div>
+                {% if not folders %}
                     <div class="col-10 text-center">
                         <h3>There is no folders. <a style="text-decoration: underline; cursor: pointer; color: #177199;"
-                                                    data-toggle="modal" data-target="#newFolderModal">Add one ! </a></h3>
+                                                    data-toggle="modal" data-target="#newFolderModal">Add one ! </a>
+                        </h3>
                     </div>
                 {% endif %}
                 {% if files %}
@@ -147,62 +156,74 @@
                     </div>
                     <div class="table-responsive col-10">
                     <table class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">Type</th>
-                                <th scope="col">Size</th>
-                                <th scope="col">Created at</th>
-                                <th scope="col">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Size (in Bytes)</th>
+                        <th scope="col">Uploaded date and time</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
                 {% endif %}
                 {% for file in files %}
-                              <tr>
-                                <th scope="row">{{ file.filename }}</th>
-                                <td>{{ file.type }}</td>
-                                <td>{{ file.size }}</td>
-                                <td>{{ file.created_at }}</td>
-                                <td>
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <form action="/download" method="get">
-                                                <input type="hidden" name="file_name" value="{{ file.filename }}">
-                                                <input type="hidden" name="folder_path" value="/">
-                                                <input class="btn btn-success" type="submit" name="button" value="Download file">
-                                            </form>
-                                        </div>
-                                        <div class="col-6">
-                                            <form action="/delete_file" method="post">
-                                                <input type="hidden" name="file_name" value="{{ file.filename }}">
-                                                <input type="hidden" name="folder_path" value="/">
-                                                <input class="btn btn-danger" type="submit" name="button" value="Delete file">
-                                            </form>
-                                        </div>
-                                    </div>
-                                </td>
-                              </tr>
+                    <tr>
+                        <th scope="row">{{ file.filename }}</th>
+                        <td>{{ file.type }}</td>
+                        <td>{{ file.size }}</td>
+                        <td>{{ file.created_at.strftime("%b %d %Y at %H:%M:%S") }}</td>
+                        <td>
+                            <div class="row">
+                                <div class="col-6">
+                                    <form action="/download" method="get">
+                                        <input type="hidden" name="file_name" value="{{ file.filename }}">
+                                        <input type="hidden" name="folder_path" value="/">
+                                        <input class="btn btn-success" type="submit" name="button"
+                                               value="Download file">
+                                    </form>
+                                </div>
+                                <div class="col-6">
+                                    <form action="/delete_file" method="post">
+                                        <input type="hidden" name="file_name" value="{{ file.filename }}">
+                                        <input type="hidden" name="folder_path" value="/">
+                                        <input class="btn btn-danger" type="submit" name="button" value="Delete file"
+                                               onclick="displayFileAlert()">
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
                 {% endfor %}
-                        </tbody>
-                    </table>
-                 {% if not files %}
+                </tbody>
+                </table>
+                {% if not files %}
                     <div class="col-10 text-center mt-5">
                         <h3>There is no files. <a style="text-decoration: underline; cursor: pointer; color: #177199;"
-                                                    data-toggle="modal" data-target="#newFileModal">Add one ! </a></h3>
+                                                  data-toggle="modal" data-target="#newFileModal">Add one ! </a></h3>
                     </div>
                 {% endif %}
                 </div>
+            </div>
+        {% endif %}
     </div>
-            {% endif %}
-    </div>
-{% if not my_user %}
-    <div class="mx-auto text-center">
-        <h3>There is nothing!</h3>
-        <a href="{{ url }}"><h4>Click here to login !</h4></a>
-    </div>
-{% endif %}
+    {% if not my_user %}
+        <div class="mx-auto text-center">
+            <h3>There is nothing!</h3>
+            <a href="{{ url }}"><h4>Click here to login !</h4></a>
+        </div>
+    {% endif %}
 </div>
+
+<script>
+    function displayAlert() {
+        confirm("Delete a folder will delete all sub-folders and files in their sub-folders.\n\t\t\t\t\t\tAre you sure ?");
+    }
+
+    function displayFileAlert() {
+        confirm("Are you sure ?")
+    }
+</script>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

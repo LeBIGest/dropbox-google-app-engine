@@ -11,7 +11,7 @@ from file import File
 class DownloadFile(blobstore_handlers.BlobstoreDownloadHandler):
 
     """
-    This method is call when the user will download a file
+    This method is called when the user will download a file
     It will display the file on the screen or download it directly
     """
     def get(self):

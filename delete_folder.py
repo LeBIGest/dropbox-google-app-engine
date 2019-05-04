@@ -13,10 +13,10 @@ from delete_file import DeleteFile
 
 # Class to handle the deletion of the folders
 class DeleteFolder(webapp2.RequestHandler):
-
     """
     Delete all inner folders and files in the future deleted folder
     """
+
     def delete_inner_folders(self, folder, origin_folder, my_user):
 
         # Call the DeleteFile Object
@@ -27,7 +27,6 @@ class DeleteFolder(webapp2.RequestHandler):
 
         # Browse all folders
         for sub_folder in folders_found:
-
             # Call the recursively the function to get all inner folders of the inner folders
             self.delete_inner_folders(sub_folder, origin_folder, my_user)
 
@@ -41,7 +40,7 @@ class DeleteFolder(webapp2.RequestHandler):
             for inner_file in files_found:
                 deleteFile.delFile(folder, inner_file)
 
-            # Create a stop condition, if the folder path is a future deleted folder , call return
+            # Create a stop condition, if the folder path is a future deleted folder, return
             if folder.path == origin_folder:
                 return
 
@@ -57,6 +56,7 @@ class DeleteFolder(webapp2.RequestHandler):
     Handle the 'delete_folder' request
     It will retrieve the folder in the Datastore and delete all its content
     """
+
     def post(self):
 
         # Get the called action
@@ -75,31 +75,36 @@ class DeleteFolder(webapp2.RequestHandler):
             cur_folder = self.request.get('cur_folder_path')
 
             # Retrieve the folder from the Datastore
-            del_fold = Folder.query(ndb.AND(Folder.path == del_folder, Folder.parent_folder_path == cur_folder), ancestor=myuser.key).fetch()
+            del_fold = Folder.query(ndb.AND(Folder.path == del_folder, Folder.parent_folder_path == cur_folder),
+                                    ancestor=myuser.key).fetch()
 
-            # We cannot delete the root folder (with the '/' path)
-            if del_fold[0].path is "/":
+            if del_fold:
 
-                # Redirect to the current folder page
-                self.redirect(cur_folder)
-                return
+                # We cannot delete the root folder (with the '/' path)
+                if del_fold[0].path is "/":
 
-            # Otherwise
-            else:
+                    # Redirect to the current folder page
+                    self.redirect(cur_folder)
+                    return
 
-                # Get the parent folder
-                parent_folder = Folder.query(Folder.path == del_fold[0].parent_folder_path, ancestor=myuser.key).fetch()
+                # Otherwise
+                else:
 
-                # Find the index of the deleted folder and delete it from the array
-                idx = parent_folder[0].inner_folders.index(del_fold[0].path)
-                self.delete_inner_folders(del_fold[0], del_fold[0].path, myuser)
-                del parent_folder[0].inner_folders[idx]
+                    # Get the parent folder
+                    parent_folder = Folder.query(Folder.path == del_fold[0].parent_folder_path, ancestor=myuser.key).fetch()
 
-                # Delete the folder Entity
-                del_fold[0].key.delete()
+                    # Find the index of the deleted folder and delete it from the array
+                    idx = parent_folder[0].inner_folders.index(del_fold[0].path)
 
-                # Update the parent folder
-                parent_folder[0].put()
+                    # Delete all inner foldes and files from this folder
+                    self.delete_inner_folders(del_fold[0], del_fold[0].path, myuser)
+                    del parent_folder[0].inner_folders[idx]
 
-                # Redirect to the current folder page
-                self.redirect(cur_folder)
+                    # Delete the folder Entity
+                    del_fold[0].key.delete()
+
+                    # Update the parent folder
+                    parent_folder[0].put()
+
+            # Redirect to the current folder page
+            self.redirect(cur_folder)

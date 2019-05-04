@@ -14,7 +14,7 @@ class Folder(ndb.Model):
     # The path of the parent folder
     parent_folder_path = ndb.StringProperty()
 
-    # An array of paths which represent all sub folders of this folder
+    # An array of paths which represent all sub-folders of this folder
     inner_folders = ndb.StringProperty(repeated=True)
 
     # An array of File which the contained files in this folder

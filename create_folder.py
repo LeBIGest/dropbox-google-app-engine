@@ -27,7 +27,7 @@ class CreateFolder(webapp2.RequestHandler):
         # Check if it is the right action
         if action == 'Add Folder':
 
-            # Get the name of the new folder and the current folder path
+            # Get the name of the new folder and the name of the current folder path
             new_folder = self.request.get('new_folder')
             cur_folder = self.request.get('current_folder')
 
@@ -61,7 +61,7 @@ class CreateFolder(webapp2.RequestHandler):
                     # Save the creation
                     new_folder_obj.put()
 
-                    # Add the path of the new folder in the array of sub folders of the parent folder
+                    # Add the path of the new folder in the array of sub folders of the folder where the new folder was created
                     cur_folder_obj[0].inner_folders.append(new_folder_obj.path)
                     cur_folder_obj[0].put()
 
